@@ -13,7 +13,14 @@ let server;
 
 function startServer() {
   server = http.createServer((req, res) => {
-    console.log("req.url: ", req.url);
+    // React DevTools uses websockets, and logging each request is noisy
+    if (req.url === "/_next/webpack-hmr") {
+      return;
+    }
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("req.url: ", req.url);
+    }
 
     try {
       let filePath = path.join(__dirname, req.url);

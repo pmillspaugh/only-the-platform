@@ -5,5 +5,9 @@
   "main": "index.js",
   "author": "Peter Millspaugh",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_ENV=development node src/server.js",
+    "start": "node src/server.js"
+  }
 }
