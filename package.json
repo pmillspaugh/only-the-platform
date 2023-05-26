@@ -1,0 +1,9 @@
+{
+  "name": "onlytheplatform",
+  "version": "1.0.0",
+  "description": "a website built using only native browser and Node.js features - just vanilla html, css, and js",
+  "main": "index.js",
+  "author": "Peter Millspaugh",
+  "license": "ISC",
+  "type": "module"
+}
