@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/index.css" />
+    <title>Battery Status API</title>
+  </head>
+  <body>
+    <h1>Battery Status API</h1>
+    <ul>
+      <li id="battery-level">
+        Battery level:
+        <progress max="100" value="0"></progress>
+      </li>
+      <li id="is-battery-charging">Charging?</li>
+      <li id="battery-charging-time">Time until fully charged:</li>
+      <li id="battery-discharging-time">Battery life remaining:</li>
+    </ul>
+
+    <p>
+      <!-- TODO: -->
+      <!-- Could note here how unreliable this seems to be. -->
+      <!-- At least `batteryManager.chargingTime` -->
+    </p>
+
+    <script src="js/battery.js"></script>
+  </body>
+</html>
