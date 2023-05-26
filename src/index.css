@@ -1,0 +1,29 @@
+/*
+  CSS CUSTOM PROPERTIES
+*/
+
+:root {
+  --bg-color: white;
+  --text-color: black;
+}
+
+/* 
+  CSS RESET
+*/
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+  BASE STYLES
+*/
+
+*,
+html,
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
