@@ -6,12 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/index.css" />
     <title>Service Workers</title>
-    <script src="js/serviceWorkers.js"></script>
+    <script src="js/serviceWorkers.js" defer></script>
   </head>
   <body>
     <h1>Service Workers</h1>
+    <p>TODO: explanation etc.</p>
 
     <button id="register-sw">Register</button>
     <button id="unregister-sw">Unregister</button>
+
+    <!-- TODO: this should really only be visible if a sw is registered -->
+    <form id="caching-strategy" action="" method="POST">
+      <label for="caching-strategy-select">Caching strategy</label>
+      <select name="caching-strategy" id="caching-strategy-select">
+        <option value="cache-first">Cache-first</option>
+        <option value="network-first">Network-first</option>
+        <option value="stale-while-revalidate">Stale-while-revalidate</option>
+        <option value="cache-only">Cache-only</option>
+        <option value="network-only">Network-only</option>
+      </select>
+      <button>Update</button>
+    </form>
   </body>
 </html>
