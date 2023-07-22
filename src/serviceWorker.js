@@ -1,7 +1,7 @@
 // TODO: remove the console.logs
 // TODO: offline default page
 // TODO: cache invalidation/expiration
-// TODO: code to nuke sw
+// TODO: figure out why sw waits to activate until [hard refresh]
 
 // TODO: is there a best practice for enums in vanilla JS?
 const CachingStrategy = {
@@ -31,25 +31,34 @@ self.addEventListener("activate", () => {
 self.addEventListener("fetch", (event) => {
   console.log(`Network request to URL: ${event.request.url}`);
 
-  /* 
-    TODO: let the end-user control which strategy to use
-
-    1.  Dropdown to select on the FE
-    2.  Endpoint/URL (e.g. `/set-caching-strategy`) intercepted by the sw
-        that updates a constant in-memory, activeCachingStrategy
-  */
+  // TODO: this handler is not firing — why is the sw being bypassed?
+  if (
+    event.request.url === "/caching-strategy" &&
+    event.request.method === "POST"
+  ) {
+    console.log("intercepted fetch in sw");
+    console.log("event.request.body");
+    console.log(event.request.body);
+    // activeCachingStrategy = event.request.body["caching-strategy"]
+    return;
+  }
 
   switch (activeCachingStrategy) {
     case CachingStrategy.CACHE_FIRST:
       event.respondWith(cacheFirst(event));
+      return;
     case CachingStrategy.NETWORK_FIRST:
       event.respondWith(networkFirst(event));
+      return;
     case CachingStrategy.STALE_WHILE_REVALIDATE:
       event.respondWith(staleWhileRevalidate(event));
+      return;
     case CachingStrategy.CACHE_ONLY:
       event.respondWith(cacheOnly(event));
+      return;
     case CachingStrategy.NETWORK_ONLY:
       event.respondWith(networkOnly(event));
+      return;
   }
 });
 
@@ -85,13 +94,18 @@ async function getJohnnyCache() {
 // TODO: offline fallback for all of these
 
 async function cacheFirst(event) {
-  console.log("cacheFirst");
+  console.log(`Strategy: cache-first for ${event.request.url}`);
 
-  return caches.match(event.request) || fetch(event.request);
+  const cachedResponse = await caches.match(event.request);
+  console.log(
+    `Cache ${cachedResponse ? "hit" : "miss"} on ${event.request.url}`
+  );
+
+  return cachedResponse || fetch(event.request);
 }
 
 async function networkFirst(event) {
-  console.log("networkFirst");
+  console.log(`Strategy: network-first for ${event.request.url}`);
 
   let response;
   try {
@@ -103,17 +117,17 @@ async function networkFirst(event) {
 }
 
 async function staleWhileRevalidate(event) {
-  console.log("staleWhileRevalidate");
+  console.log(`Strategy: stale-while-revalidate for ${event.request.url}`);
 
   const cachedResponse = await caches.match(event.request);
 
-  // Cache hit: return immediately and revalidate in the background
+  // Cache hit: return "stale" response immediately and revalidate in the background
   if (cachedResponse) {
     event.waitUntil(revalidate());
     return cachedResponse;
   }
 
-  // Cache miss, revalidate will return the network response
+  // Cache miss: revalidate will return the network response
   return revalidate();
 
   async function revalidate() {
@@ -130,13 +144,13 @@ async function staleWhileRevalidate(event) {
 }
 
 async function cacheOnly(event) {
-  console.log("cacheOnly");
+  console.log(`Strategy: cache-only for ${event.request.url}`);
 
   return caches.match(event.request);
 }
 
 async function networkOnly(event) {
-  console.log("networkOnly");
+  console.log(`Strategy: network-only for ${event.request.url}`);
 
   return fetch(event.request);
 }
